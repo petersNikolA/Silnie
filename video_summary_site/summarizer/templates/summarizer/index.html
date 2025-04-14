@@ -1,0 +1,19 @@
+
+{% extends "summarizer/base_page.html" %}
+
+{% block pagetitle %}Видео-конспект{% endblock %}
+
+{% block page-title %}Сервис конспектов{% endblock %}
+
+{% block page-lead %}Вставьте ссылку на видео, и мы сгенерируем для вас PDF-конспект{% endblock %}
+
+{% block content %}
+<form action="/result/" method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        {{ form.video_url.label_tag }}
+        {{ form.video_url }}
+    </div>
+    <button type="submit" class="btn btn-primary">Создать конспект</button>
+</form>
+{% endblock %}
