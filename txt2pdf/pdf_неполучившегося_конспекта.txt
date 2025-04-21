@@ -1,0 +1,76 @@
+from google.colab import files
+uploaded = files.upload()
+ pip install weasyprint
+from weasyprint import HTML
+import os
+def read_text_file(file_path):
+    """Чтение содержимого текстового файла и возврат его в виде строки."""
+    with open(file_path, 'r', encoding='utf-8') as file:
+        return file.read()
+
+def process_text_content(text_content):
+    """Обрабатывает текст для HTML форматирования, выделяя заголовок и подзаголовок 'план занятий'."""
+    # Разделение текста на строки
+    lines = text_content.splitlines()
+
+    # Проверка на наличие строк
+    if not lines:
+        return ""
+    
+    # Заголовок
+    if len(lines) >= 2:
+        title_text = f"{lines[0]} {lines[1]}"
+        remaining_lines = lines[2:]
+    else:
+        title_text = lines[0]
+        remaining_lines = []
+
+    html_content = f"<h1>{title_text}</h1>\n"
+    
+    # Обработка каждой строки
+    for line in lines[1:]:
+        stripped_line = line.strip()
+        if stripped_line.lower() == "план занятий":  # Если строка 'план занятий'
+            html_content += f"<h2>{stripped_line}</h2>\n"
+        elif any(char.isdigit() for char in stripped_line):  # Если строка содержит цифры, выделяем её
+            html_content += f"<p>{stripped_line}</p>\n"
+        else:
+            # Иначе добавляем как обычный текст с <br/> для разделения строк
+            html_content += f"{stripped_line}<br/>\n"
+
+    return html_content
+
+def create_pdf_from_text(text_content, output_pdf):
+    # Создаем HTML-документ с форматированным контентом
+    html_template = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Конспект PDF</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 30px; }}
+            h1 {{ color: #333; font-size: 24px; margin-bottom: 10px; text-align: center; }}
+            h2 {{ color: #555; font-size: 20px; margin-bottom: 10px; text-align: left; }}
+            p {{ margin: 10px 0; line-height: 1.5; }}
+        </style>
+    </head>
+    <body>
+        {text_content}
+    </body>
+    </html>
+    """
+    
+    # Генерация PDF из HTML
+    HTML(string=html_template).write_pdf(output_pdf)
+
+# Укажите путь к вашему текстовому файлу здесь
+text_file_path = '/content/test_konspect.txt'  # <-- Убедитесь, что это путь к вашему файлу
+
+# Чтение данных из текстового файла
+text_file_content = read_text_file(text_file_path)
+
+# Обработка содержимого текстового файла
+formatted_text_content = process_text_content(text_file_content)
+
+# Создание PDF из отформатированного текста
+create_pdf_from_text(formatted_text_content, 'output.pdf')
