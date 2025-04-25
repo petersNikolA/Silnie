@@ -48,6 +48,7 @@ Repository for hackaton
 
     Готовый файл c конспектом - output.pdf
 
+Ссылка на видеопрезентацию: https://drive.google.com/file/d/18EUZVGBEZYi57tYNNBFpaeTXHuk-wiT1/view?usp=sharing
 На данный момент реализован рабочий прототип генератора конспекта.
 Кроме этого дополнительно создан самый первый макет дизайна сервиса реализованный при помощи Django (все файлы в папке video_summary_site):
 
